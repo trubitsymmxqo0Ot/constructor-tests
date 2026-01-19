@@ -1,0 +1,12 @@
+CREATE TABLE person(
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(24) NOT NULL,
+  email TEXT NOT NULL UNIQUE,
+  password TEXT NOT NULL
+);
+
+create TABLE token(
+  id SERIAL PRIMARY KEY,
+  refreshToken TEXT UNIQUE NOT NULL,
+  FOREIGN KEY (id) REFERENCES person(id) ON DELETE CASCADE
+);
