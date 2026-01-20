@@ -1,0 +1,14 @@
+:root {
+  --bg-color: #C4C4C4;
+  --main-text-color: #000;
+  --blue-text-color: #0057FF;
+
+  --container: 1200px;
+  --small-size: 19px;
+  --medium-size-s: 21px;
+  --medium-size-m: 23px;
+  --medium-size-l: 29px;
+  --large-size-s: 39px;
+  --large-size-m: 41px;
+
+}

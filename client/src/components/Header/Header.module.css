@@ -1,0 +1,27 @@
+.wrapper {
+  background-color: var(--bg-color);
+  height: 50px;
+}
+.body {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 100%;
+}
+.btn {
+  background-color: transparent;
+  border: 1px solid var(--main-text-color);
+  font-size: var(--small-size);
+  padding: 4px 19px;
+  display: block;
+  margin-right: 21px;
+  transition: color 500ms, background-color 500ms;
+}
+.btn:hover {
+  background-color: var(--main-text-color);
+  color: var(--bg-color);
+}
+
+.btn:last-child {
+  margin: 0;
+}

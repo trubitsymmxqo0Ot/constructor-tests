@@ -1,0 +1,55 @@
+.container {
+  max-width: 775px;
+  margin: 0 auto;
+  height: calc(100vh - 50px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  padding: 27px 62px;
+}
+
+.title {
+  font-size: var(--large-size-s);
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.input {
+  border: 1px solid var(--main-text-color);
+  margin-bottom: 41px;
+  font-size: var(--large-size-s);
+  padding: 5px 10px;
+  display: block;
+  width: 100%;
+}
+
+.input:last-child {
+  margin: 0;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.forgetPassword {
+  color: var(--blue-text-color);
+  font-size: var(--medium-size-m);
+}
+
+.entryBtn { 
+  font-size: var(--medium-size-m);
+  border: 1px solid var(--main-text-color);
+  padding: 11px 23px;
+  transition: color 500ms, background-color 500ms;
+}
+
+.entryBtn:hover {
+  background-color: var(--main-text-color);
+  color: var(--bg-color);
+}
