@@ -1,6 +1,7 @@
 import type { NextFunction, Response, Request } from "express";
 import userService from "../services/user-service.ts";
 import db from "../bd.ts";
+import ErrorFabric from "../exceptions/ErrorFabric.ts";
 
 class FormController {
   async register(req: Request, res: Response, next: NextFunction) {
@@ -8,7 +9,7 @@ class FormController {
       const { email, password } = req.body;
       const createUser = await userService.register(email, password);
       if (!createUser?.generateTokens && !createUser?.getUserDTO) {
-        throw new Error(
+        throw ErrorFabric.BadRequest(
           "При создании пользователя произошла неизвестная ошибка",
         );
       }
@@ -30,7 +31,7 @@ class FormController {
       const {email, password} = req.body;
       const response = await userService.login(email, password);
       if(!response) {
-        throw new Error('Произошла неожиданная ошибка');
+        throw ErrorFabric.BadRequest('Произошла неожиданная ошибка');
       }
       res.cookie('refreshToken', response.generateNewToken.refreshToken, {
         maxAge: 30 * 24 * 60 * 60 * 1000,
@@ -42,9 +43,7 @@ class FormController {
         token: response.generateNewToken.refreshToken,
       });
     } catch(e) {
-      if(e instanceof Error) {
-        throw new Error(e.message);
-      }
+        next(e);
     }
   }
   async logout(req: Request, res: Response, next: NextFunction) {
@@ -52,7 +51,7 @@ class FormController {
       const {refreshToken} = req.cookies;
       const {email} = req.body;
       if(!refreshToken) {
-        throw new Error('Пользователь не авторизован');
+        throw ErrorFabric.UserNotAuthorization();
       }
       await userService.logout(email, refreshToken);
       res.clearCookie('refreshToken');
@@ -60,7 +59,7 @@ class FormController {
       return res.json(500);
     } catch(e) {
       if(e instanceof Error) {
-        throw new Error(e.message);
+        throw ErrorFabric.BadRequest(e.message);
       }
     }
   }
@@ -68,11 +67,11 @@ class FormController {
     try {
       const { refreshToken } = req.cookies;
       if (!refreshToken) {
-        throw new Error("Пользователь был не найден");
+        throw ErrorFabric.UserNotAuthorization();
       }
       const response = await userService.refresh(refreshToken);
       if(!response) {
-        throw new Error('Пользовать не авторизован');
+        throw ErrorFabric.UserNotAuthorization();
       }
       res.cookie("refreshToken", response.generateNewToken.refreshToken, {
         maxAge: 30 * 24 * 60 * 60 * 1000,

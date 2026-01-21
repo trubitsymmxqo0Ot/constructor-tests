@@ -3,6 +3,7 @@ import type { User } from '../types/types.ts';
 import dotenv from 'dotenv';
 import db from '../bd.ts';
 import type { QueryResult } from 'pg';
+import ErrorFabric from '../exceptions/ErrorFabric.ts';
 dotenv.config({path: "../.env", override: true})
 
 class tokenService {
@@ -14,7 +15,7 @@ class tokenService {
       expiresIn: '30d',
     })
     if(!accessToken && !refreshToken) {
-      throw new Error('Один из токенов не удалось создать');
+      throw ErrorFabric.BadRequest('Один из токенов не удалось создать');
     }
     return {accessToken, refreshToken};
   }
@@ -28,12 +29,12 @@ class tokenService {
       await db.query(`INSERT INTO token (id, refreshToken) VALUES ($1, $2)`, [id, token]);
       const findToken = await db.query(`SELECT * FROM token WHERE id = $1`, [id]);
       if(!findToken.rows[0]) {
-        throw new Error('Произошла неизвестная ошибка');
+        throw ErrorFabric.BadRequest('Произошла неизвестная ошибка');
       }
       return findToken.rows[0];
     } catch(e) {
       if(e instanceof Error) {
-        throw new Error(e.message);
+        throw ErrorFabric.BadRequest(e.message);
       }
     }
   }
@@ -41,16 +42,20 @@ class tokenService {
       const response = jwt.verify(refreshToken, process.env.REFRESH_TOKEN || '');
       return response;
   }
+  verifyAccessToken(accessToken: string) {
+    const response = jwt.verify(accessToken, process.env.ACCESS_TOKEN || '');
+    return response;
+  }
   async tryFindToken(refreshToken: string) {
     try {
       const findToken: QueryResult<User> = await db.query(`SELECT * FROM token WHERE refreshToken = $1`, [refreshToken]);
       if(!findToken.rows[0]) {
-        throw new Error('Пользователь не авторизован');
+        throw ErrorFabric.UserNotAuthorization();
       }
       return findToken.rows[0];
     } catch(e) {
       if(e instanceof Error) {
-        throw new Error(e.message);
+        throw ErrorFabric.BadRequest(e.message);
       }
     }
   }
@@ -58,13 +63,13 @@ class tokenService {
     try {
       const tryFindToken = await db.query(`SELECT * FROM token WHERE refreshToken = $1`, [token]);
       if(!tryFindToken.rows[0]) {
-        throw new Error('Пользователь не авторизован');
+        throw ErrorFabric.UserNotAuthorization();
       }
       const deleteToken = await db.query(`DELETE FROM token WHERE refreshToken = $1`, [token]);
       return deleteToken.rows[0];
     } catch(e) {
       if(e instanceof Error) {
-        throw new Error(e.message);
+        throw ErrorFabric.BadRequest(e.message);
       }
     }
   }

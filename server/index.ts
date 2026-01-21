@@ -4,6 +4,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import router from "./router/router.ts";
 import db from './bd.ts';
+import ErrorMiddleware from "./middleware/error-middleware.ts";
 
 dotenv.config({path: "./.env", override: true})
 
@@ -11,9 +12,13 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  credentials: true,
+  origin: process.env.HOST,
+}));
 app.use(cookieParser());
 app.use('/auth', router);
+app.use(ErrorMiddleware);
 
 async function server() {
   try {

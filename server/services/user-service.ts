@@ -4,6 +4,7 @@ import db from "../bd.ts";
 import type { User } from "../types/types.ts";
 import type { QueryResult } from "pg";
 import bcrypt from 'bcrypt';
+import ErrorFabric from "../exceptions/ErrorFabric.ts";
 
 class UserServices {
   async register(email: string, password: string) {
@@ -14,7 +15,7 @@ class UserServices {
         [email],
       );
       if (tryFindPerson.rows[0]) {
-        throw new Error("Пользователь уже существует");
+        throw ErrorFabric.BadRequest('Пользователя не существует');
       }
       await db.query(`INSERT INTO person (email, password) VALUES ($1, $2)`, [
         email,
@@ -25,7 +26,7 @@ class UserServices {
         [email],
       );
       if (!tryFindCreatedPerson.rows) {
-        throw new Error("Пользователя не удалось создать");
+        throw ErrorFabric.BadRequest("Пользователя не удалось создать");
       }
       const getUserDTO = new userDTO(tryFindCreatedPerson.rows[0]);
       const generateTokens = tokenService.generateTokens({ ...getUserDTO });
@@ -36,7 +37,7 @@ class UserServices {
       };
     } catch (e) {
       if (e instanceof Error) {
-        throw new Error(e.message);
+        throw ErrorFabric.BadRequest(e.message);
       }
     }
   }
@@ -44,11 +45,11 @@ class UserServices {
     try {
       const findPerson = await db.query(`SELECT * FROM person WHERE email = $1`, [email]);
       if(!findPerson.rows[0]) {
-        throw new Error('Неверный логин или пароль!');
+        throw ErrorFabric.BadRequest('Неверный логин или пароль!');
       }
       const verifyPassword = await bcrypt.compare(password, findPerson.rows[0].password,);
       if(!verifyPassword) {
-        throw new Error('Неверный логин или пароль!');
+        throw ErrorFabric.BadRequest('Неверный логин или пароль!');
       }
       const getUserDTO = new userDTO(findPerson.rows[0]);
       const generateNewToken = tokenService.generateTokens({...getUserDTO});
@@ -59,7 +60,7 @@ class UserServices {
       } 
     } catch(e) {
       if(e instanceof Error) {
-        throw new Error(e.message);
+        throw ErrorFabric.BadRequest(e.message);
       }
     }
   }
@@ -67,12 +68,12 @@ class UserServices {
     try {
       const findUser = await db.query(`SELECT * FROM person WHERE email = $1`, [email]);
       if(!findUser.rows[0]) {
-        throw new Error('Пользователь не найден');
+        throw ErrorFabric.BadRequest('Пользователь не найден');
       }
       await tokenService.deleteToken(token);
     } catch(e) {
       if(e instanceof Error) {
-        throw new Error(e.message);
+        throw ErrorFabric.BadRequest(e.message);
       }
     }
   }
@@ -81,14 +82,14 @@ class UserServices {
       const verifyToken = tokenService.verifyRefreshToken(refreshToken);
       const findToken = await tokenService.tryFindToken(refreshToken);
       if (!verifyToken || !findToken) {
-        throw new Error("Пользовать не авторизован");
+        throw ErrorFabric.UserNotAuthorization();
       }
       const getInfoUser: QueryResult<User> = await db.query(
         `SELECT * FROM person WHERE id = $1`,
         [findToken.id],
       );
       if (!getInfoUser.rows[0]) {
-        throw new Error("Пользователь не найден");
+        throw ErrorFabric.BadRequest("Пользователь не найден");
       }
       const getUserDTO = new userDTO(getInfoUser.rows[0]);
       const generateNewToken = tokenService.generateTokens({ ...getUserDTO });
@@ -99,7 +100,7 @@ class UserServices {
       }
     } catch (e) {
       if (e instanceof Error) {
-        throw new Error(e.message);
+        throw ErrorFabric.BadRequest(e.message);
       }
     }
   }
