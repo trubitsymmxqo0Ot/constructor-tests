@@ -11,6 +11,6 @@ const pool = new Pool({
   password: db_password,
   host: "localhost",
   port: 5432,
-  database: 'constructortests'
+  database: 'constructor_tests',
 })
 export default pool;
