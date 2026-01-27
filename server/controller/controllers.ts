@@ -78,10 +78,10 @@ class FormController {
         httpOnly: true,
       })
       console.log('Токены успешно созданы');
-      return {
+      return res.json({
         ...response?.getUserDTO,
         token: response?.generateNewToken.refreshToken,
-      }
+      })
     } catch (e) {
       next(e);
     }

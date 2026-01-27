@@ -1,0 +1,36 @@
+input {
+  border: 1px solid var(--main-text-color);
+  font-size: var(--large-size-s);
+  padding: 5px 10px;
+  display: block;
+  width: 100%;
+}
+
+
+
+
+.forgetPassword {
+  color: var(--blue-text-color);
+  font-size: var(--medium-size-m);
+}
+
+
+.entryBtn {
+  font-size: var(--medium-size-m);
+  border: 1px solid var(--main-text-color);
+  padding: 11px 23px;
+  transition:
+    color 500ms,
+    background-color 500ms;
+}
+
+.entryBtn:hover {
+  background-color: var(--main-text-color);
+  color: var(--bg-color);
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

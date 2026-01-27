@@ -1,0 +1,22 @@
+.email {
+  margin-bottom: 41px;
+}
+
+.password {
+  padding: 5px 65px 5px 10px;
+}
+
+.passwordImage {
+  width: 60px;
+  height: 100%;
+  object-fit: contain;
+  position: absolute;
+  top: 0;
+  right: 5px;
+  cursor: pointer;
+}
+
+.body {
+  position: relative;
+  margin-bottom: 21px;
+}

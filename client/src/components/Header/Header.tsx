@@ -1,4 +1,4 @@
-import { classNames } from "../../helpers/classNames";
+import { classNames } from "../../helpers/classNames/classNames";
 import styles from "./Header.module.css";
 
 const Header = () => {

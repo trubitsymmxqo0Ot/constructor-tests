@@ -86,7 +86,7 @@ class UserServices {
       }
       const getInfoUser: QueryResult<User> = await db.query(
         `SELECT * FROM person WHERE id = $1`,
-        [findToken.id],
+        [findToken?.id],
       );
       if (!getInfoUser.rows[0]) {
         throw ErrorFabric.BadRequest("Пользователь не найден");

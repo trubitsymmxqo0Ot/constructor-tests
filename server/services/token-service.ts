@@ -48,8 +48,9 @@ class tokenService {
   }
   async tryFindToken(refreshToken: string) {
     try {
-      const findToken: QueryResult<User> = await db.query(`SELECT * FROM token WHERE refreshToken = $1`, [refreshToken]);
-      if(!findToken.rows[0]) {
+      console.log(refreshToken);
+      const findToken: QueryResult<User> = await db.query(`SELECT * FROM token WHERE refreshtoken = $1`, [refreshToken]);
+      if(findToken.rows.length === 0) {
         throw ErrorFabric.UserNotAuthorization();
       }
       return findToken.rows[0];
