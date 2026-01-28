@@ -1,11 +1,11 @@
-import styles from "./Registration.module.css";
-import $axios from "@/helpers/instanse/axios";
 import Input from "@/components/Input/Input";
+import styles from "./Login.module.css";
 import { useMutation } from "@tanstack/react-query";
+import $axios from "@/helpers/instanse/axios";
 import type { IData, Response } from "@/helpers/types/types";
 import { useRemember } from "@/helpers/hooks/useRemember";
 
-const Registration = () => {
+const Login = () => {
   const { mutate, data } = useMutation({
     mutationFn: async ({
       path,
@@ -16,19 +16,19 @@ const Registration = () => {
     }) => {
       const response: Response = await $axios.post(path, req);
       const data = response.data;
-      localStorage.setItem("token", data.token);
+      localStorage.setItem('token', data.token);
       return data;
     },
   });
   const { userData, setUserData } = useRemember(data);
   const toggleButton = (e: React.FormEvent) => {
     e.preventDefault();
-    mutate({ path: "/register", req: userData });
+    mutate({ path: "/login", req: userData });
   };
   return (
     <div className={styles.container}>
       <form className={styles.wrapper}>
-        <h2 className={styles.title}>Регистрация</h2>
+        <h2 className={styles.title}>Вход</h2>
         <div className={styles.body}>
           <Input
             type="text"
@@ -51,11 +51,15 @@ const Registration = () => {
             value={userData.password}
           />
         </div>
-        <button className={styles.entryBtn} onClick={toggleButton}>
-          Зарегистрироваться
-        </button>
+        <div className={styles.item}>
+          <a href="#" className={styles.forgetPassword}>Забыли пароль?</a>
+          <button className={styles.entryBtn} onClick={toggleButton}>
+            Войти
+          </button>
+        </div>
       </form>
     </div>
   );
 };
-export default Registration;
+
+export default Login;

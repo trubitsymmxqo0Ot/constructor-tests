@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { useLogin } from "../../../store/store";
 import { useMutation } from "@tanstack/react-query";
-import $axios from "../../../helpers/instanse/axios";
+import $axios from "@/helpers/instanse/axios";
 
 import styles from './Form.module.css';
-import type { IData, Response } from "../../../helpers/types/types";
-import RegisterInputs from "../RegisterInputs/RegisterInputs";
+import type { IData, Response } from "@/helpers/types/types";
+import RegisterInputs from "@/pages/HomePage/Registration/RegisterInputs/RegisterInputs";
+import { useLogin } from "@/store/store";
 
 const Form = () => {
   const [userData, setUserData] = useState({
@@ -41,10 +41,7 @@ const Form = () => {
     <form>
       <RegisterInputs userData={userData} setUserData={setUserData}/>
       <div className={styles.item}>
-        <a className={styles.forgetPassword}>Забыли пароль?</a>
-        <button className={styles.entryBtn} onClick={toggleButton}>
-          Войти
-        </button>
+
       </div>
     </form>
   );

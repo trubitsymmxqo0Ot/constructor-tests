@@ -1,0 +1,13 @@
+input {
+  border: 1px solid var(--main-text-color);
+  font-size: var(--large-size-s);
+  padding: 5px 10px;
+  display: block;
+  width: 100%;
+}
+
+
+.item {
+  display: flex;
+  justify-content: center;
+}

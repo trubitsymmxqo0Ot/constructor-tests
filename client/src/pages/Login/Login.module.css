@@ -26,8 +26,6 @@
   font-size: var(--medium-size-m);
   border: 1px solid var(--main-text-color);
   padding: 11px 23px;
-  max-width: 50%;
-  margin: 0 auto;
     transition:
     color 500ms,
     background-color 500ms;
@@ -46,4 +44,14 @@
   margin-bottom: 21px;
 }
 
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.forgetPassword {
+  color: #0057ff;
+  font-size: 23px;
+}
 

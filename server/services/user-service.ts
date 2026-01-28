@@ -15,7 +15,7 @@ class UserServices {
         [email],
       );
       if (tryFindPerson.rows[0]) {
-        throw ErrorFabric.BadRequest('Пользователя не существует');
+        throw ErrorFabric.BadRequest('Пользователь уже существует!');
       }
       await db.query(`INSERT INTO person (email, password) VALUES ($1, $2)`, [
         email,
